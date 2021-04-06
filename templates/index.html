@@ -1,0 +1,294 @@
+{% extends "pages/base.html" %}
+
+{% block body %}
+
+{% verbatim vueblock %}
+<body>
+<div class="lyear-layout-web" id="app">
+<div id="loading" ref="loading"></div>
+  <div id="datas" ref="datas">
+  <div class="lyear-layout-container">
+    <!--左侧导航-->
+
+    <header class="lyear-layout-header">
+
+      <nav class="navbar navbar-default">
+
+        <div class="navbar-header">
+            <div id="logo" class="sidebar-header">
+                    <a><img src="/static/images/logo-sidebar.png" title="LightYear" alt="LightYear"/></a>
+                </div>
+        </div>
+        <div class="topbar">
+
+          <div class="topbar-left">
+            <span class="navbar-page-title">
+                <ul class="nav navbar-nav" style="display: block;">
+                    <li class="nav-item selected"> <a href="/index"><i class="mdi"></i>首页</a> </li>
+                    <li v-for="item in menu" :key="item.name"  class="nav-item "> <a :href="item.current"><i :class="item.icon" class="mdi"></i> {{item.name}}</a> </li>
+                </ul>
+            </span>
+          </div>
+
+          <ul class="topbar-right">
+          </ul>
+        </div>
+      </nav>
+
+    </header>
+    <!--End 头部信息-->
+
+    <!--页面主要内容-->
+    <main class="lyear-layout-content index">
+      <div class="container-fluid">
+        <div class="row">
+          <div v-for="(item,index) in  menu" :key="item.total" v-if="item.show == 1" class="col-sm-6 col-lg-2">
+            <div class="card" :class="item.class"  @click="click(item)">
+              <div class="card-body clearfix index-logo" :class="item.total > 0 ? 'cursor' : ''">
+                <div class="pull-right">
+                  <p class="h6 text-dark m-t-0">{{item.name}}</p>
+                  <p class="h3 text-dark m-b-0" >{{item.total}}</p>
+                </div>
+                <div class="pull-left">
+                    <span  class="img-avatar img-avatar-48 bg-translucent">
+                        <!--<i :class="item.icon" class="mdi fa-1-5x"></i>-->
+
+                        <img :src="'/static/images/' + item.img + '.png'" alt="" />
+                    </span> </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+          <div class="row">
+              <div class="col-lg-3">
+                <div class="card">
+                  <div class="card-header"><h4>文件统计</h4></div>
+                  <div class="card-body" style="display: flex;justify-content: center">
+                    <canvas id="myChart" width="250" height="250"></canvas>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="col-lg-4">
+                <div class="card">
+                  <div class="card-header"><h4>风控文件数</h4></div>
+                  <div class="card-body" >
+                      <div v-for="item in risk_statistics" >
+                          <div>{{ item.string }}</div>
+                          <div class="progress  progress-lg" style="margin-bottom: 14px">
+                          <div class="progress-bar progress-bar-striped active " :class="'progress-bar-'+item.class" role="progressbar" :aria-valuenow="item.number" aria-valuemin="0" :aria-valuemax="item.total" :style="'width:' + item.percent + '%'">
+                          </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-5">
+                <div class="card">
+                  <div class="card-header"><h4>最新USB插入动态</h4></div>
+                  <div class="card-body" >
+                        <div class="table-responsive">
+                          <table class="table table-hover">
+                            <thead>
+                             <th>设备名</th>
+                            <th>使用时间</th>
+                            </thead>
+                            <tbody>
+                              <tr v-for="usb in usb_history">
+                                <td>{{ usb.name }}</td>
+                                <td>{{ usb.time }}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-4">
+                <div class="card">
+                  <div class="card-header"><h4>系统运行状态监控</h4></div>
+                    <div class="card-body" style="display: flex;justify-content: center">
+                        <canvas class="col-lg-6" id="systemCpuChat" width="190" height="190"></canvas>
+                        <canvas class="col-lg-6" id="systemMemChat" width="190" height="190"></canvas>
+                        <div class="clearfix"></div>
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-lg-4">
+                <div class="card">
+                  <div class="card-header"><h4>USB使用次数统计</h4></div>
+                    <div class="card-body" style="display: flex;justify-content: center">
+                        <canvas  class="col-lg-12" id="usbHistory" width="290" height="240"></canvas>
+                        <div class="clearfix"></div>
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-lg-4">
+                <div class="card">
+                  <div class="card-header"><h4>文件行为分析统计</h4></div>
+                    <div class="card-body" style="display: flex;justify-content: center">
+                        <canvas  class="col-lg-12" id="analysis" width="250" height="250"></canvas>
+                        <div class="clearfix"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+
+
+              </div>
+
+    </main>
+    <!--End 页面主要内容-->
+  </div>
+</div>
+</div>
+{% endverbatim vueblock %}
+
+<!--图表插件-->
+<script type="text/javascript" src="/static/js/Chart.js"></script>
+<script type="text/javascript">
+var obj = {{ obj | safe }};
+
+
+new Vue({
+  el: '#app',
+  data: obj,
+  mounted:function() {
+      var that = this;
+      this.$nextTick(function(){
+    	  that.$refs.loading.style.display = "none";
+    	  that.$refs.datas.style.display = "block";
+      })
+  },
+  methods:{
+      click:function(num){
+    	  if(num.total>0){ window.location.href=num.current}
+
+      }
+  }
+})
+
+var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {{ statistics | safe}});
+
+const DATA_COUNT = 5;
+const NUMBER_CFG = {count: DATA_COUNT, min: 0, max: 100};
+
+const cpudata = {
+  labels: ['CPU使用', 'CPU空闲'],
+  datasets: [
+    {
+      label: 'Dataset 1',
+      data: [{{ system_statistics.cpu }}, 100-{{ system_statistics.cpu }}],
+      backgroundColor: ['#84D284', '#C5CACE', ],
+    }
+  ],
+};
+var cpu = document.getElementById('systemCpuChat').getContext('2d');
+new Chart(cpu, {
+  type: 'doughnut',
+  data: cpudata,
+  options: {
+    responsive: false,
+    plugins: {
+      legend: {
+      },
+      title: {
+        display: true,
+        text: 'CPU'
+      }
+    }
+  },
+});
+
+
+const memdata = {
+  labels: ['内存使用', '内存空闲'],
+  datasets: [
+    {
+      label: 'Dataset 1',
+      data: [{{ system_statistics.mem }}, 100-{{ system_statistics.mem }}],
+      backgroundColor: ['#FF6384', '#C5CACE', ],
+    }
+  ],
+};
+var mem = document.getElementById('systemMemChat').getContext('2d');
+new Chart(mem, {
+  type: 'doughnut',
+  data: memdata,
+  options: {
+    responsive: false,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'CPU'
+      }
+    }
+  },
+});
+
+var usbHis = document.getElementById("usbHistory").getContext("2d");
+
+new Chart(usbHis, {
+  type: 'bar',
+    data: {
+        labels: {{ usb_statistics.dateDataset | safe }},
+        datasets: [{
+            label: "使用次数",
+            backgroundColor: "rgba(51,202,185,0.5)",
+            borderColor: "rgba(0,0,0,0)",
+            hoverBackgroundColor: "rgba(51,202,185,0.7)",
+            hoverBorderColor: "rgba(0,0,0,0)",
+            data: {{ usb_statistics.valueDataset | safe }}
+    }]
+    },
+    options: {
+        responsive: false,
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+
+
+var analysis = document.getElementById("analysis").getContext("2d")
+
+new Chart(analysis, {
+    type: 'polarArea',
+    data: {
+        datasets: [{
+            data: {{ analysis_statistics.count | safe }},
+            backgroundColor: ['rgba(255,99,132,0.95)', 'rgba(75, 192, 192, 0.95)', 'rgba(255, 159, 64, 0.95)', 'rgba(231, 233, 237, 0.95)', 'rgba(54, 162, 235, 0.95)'],
+            label: 'My dataset' // for legend
+        }],
+        labels: {{ analysis_statistics.name | safe }}
+    },
+    options: {
+        responsive: false,
+        legend: {
+            display: true
+        }
+    }
+});
+
+</script>
+</body>
+{% endblock %}

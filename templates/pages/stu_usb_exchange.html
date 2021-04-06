@@ -1,0 +1,218 @@
+{% extends "pages/base.html" %}
+{% block body %}
+
+{% verbatim vueblock %}
+
+<body>
+<div class="lyear-layout-web" id="app">
+    <div id="loading" ref="loading"></div>
+    <div id="datas" ref="datas">
+        <div class="lyear-layout-container">
+            <!--左侧导航-->
+
+            <!--End 左侧导航-->
+            <!--头部信息-->
+            <header class="lyear-layout-header">
+
+                <nav class="navbar navbar-default">
+
+        <div class="navbar-header">
+            <div id="logo" class="sidebar-header">
+                    <a><img src="/static/images/logo-sidebar.png" title="LightYear" alt="LightYear"/></a>
+                </div>
+        </div>
+        <div class="topbar">
+
+          <div class="topbar-left">
+            <span class="navbar-page-title">
+                <ul class="nav navbar-nav" style="display: block;">
+                    <li class="nav-item"> <a href="/index"><i class="mdi"></i>首页</a> </li>
+                    <li v-for="item in menu" :key="item.name" :class="current_name==item.name? 'selected' : ''" class="nav-item "> <a :href="'/'+item.current"><i :class="item.icon" class="mdi"></i> {{item.name}}</a> </li>
+                </ul>
+            </span>
+          </div>
+
+          <ul class="topbar-right">
+          </ul>
+        </div>
+      </nav>
+
+            </header>
+            <!--End 头部信息-->
+
+            <!--页面主要内容-->
+            <main class="lyear-layout-content">
+
+                <div class="container-fluid">
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-toolbar clearfix">
+                                    <div class="toolbar-btn-action">
+
+                                        <a class="btn btn-default m-r-5"><i class="mdi"></i> 记录总共：{{toptotal}} 条</a>
+                                        <a class="btn btn-default m-r-5"><i class="mdi"></i> 总共：{{pages}} 页</a>
+                                    </div>
+                                </div>
+
+
+                                <div v-if="toptotal>0" class="card-body">
+
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th>序号</th>
+                                                <th>文件</th>
+                                                <th>交换路径</th>
+                                                <th>动作</th>
+                                                <th>U盘信息</th>
+                                                <th v-if="PcInfo.IsReportFull==1">操作</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr v-for="item in topData" :key="item.id">
+                                                <td>{{item.id}}</td>
+                                                <td>{{item.title}}</td>
+                                                <td>{{item.paths}}</td>
+                                                <td>{{item.ex_action=='1' ? '出' : '入'}}</td> <!--相当于电脑来说,1考出，非1考入-->
+                                                <td>{{item.stor_name}}</td>
+                                                <td v-if="PcInfo.IsReportFull==1"><a v-if="item.isdown==1"
+                                                                                     style="color: #666;text-decoration: underline;"
+                                                                                     target="_blank"
+                                                                                     :href="item.download">下载</a><span
+                                                        v-else-if="item.isdown==2">已删除</span> <span v-else>已清理</span>
+                                                </td>
+                                            </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="page" v-show="show">
+                                        <div class="pagelist">
+                                            <span class="jump" :class="{disabled:starts}"
+                                                  @click="jumpPage(--current_page)">上一页</span>
+
+                                            <span v-show="current_page>5 && 6!=pages &&  7!=pages" class="jump" @click="jumpPage(1)">1</span>
+
+
+                                            <span class="ellipsis" v-show="efont">...</span>
+
+                                            <span class="jump" v-for="num in indexs"
+                                                  :class="{bgprimary:current_page==num}"
+                                                  @click="jumpPage(num)">{{num}}</span>
+
+
+                                            <span class="ellipsis" v-show="ebehind">...</span>
+
+                                            <span v-show="current_page<pages-4 && 6!=pages &&  7!=pages " class="jump" @click="jumpPage(pages)">{{pages}}</span>
+
+                                            <span :class="{disabled:ends}" class="jump"
+                                                  @click="jumpPage(++current_page)">下一页</span>
+                                            <span class="jumppoint">前往：</span>
+                                            <span class="jumpinp"><input type="text" v-model="changePage"></span>
+                                            <span class="jump gobtn" @click="jumpPage(changePage)">跳转</span>
+                                        </div>
+                                        <span class="pageNum">第{{current_page||1}}页 / 共{{pages}}页</span>
+                                    </div>
+
+                                </div>
+                                <div v-else style="height: 100px; width: 100%; text-align: center; line-height: 100px;">
+                                    暂无数据
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/static/js/jquery.min.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/static/js/perfect-scrollbar.min.js"></script>
+<script type="text/javascript" src="/static/js/main.min.js"></script>
+<script type="text/javascript" src="/static/js/vue.min.js"></script>
+
+{% endverbatim vueblock %}
+<script type="text/javascript">
+    var obj = {{ obj | safe }}
+    new Vue({
+        el: '#app',
+        data: obj,
+        mounted: function () {
+            var that = this;
+            this.$nextTick(function () {
+                this.$refs.loading.style.display = "none";
+                this.$refs.datas.style.display = "block";
+            })
+        },
+        computed: {
+
+            show: function () {
+                return this.pages && this.pages != 1
+            },
+
+            starts: function () {
+                return this.current_page == 1;
+            },
+            ends: function () {
+                return this.current_page == this.pages;
+            },
+
+            efont: function () {
+                if (this.pages <= 7) return false;
+                return this.current_page > 5
+            },
+
+            ebehind: function () {
+                if (this.pages <= 7) return false;
+                var nowAy = this.indexs;
+                return nowAy[nowAy.length - 1] != this.pages;
+            },
+            indexs: function () {
+                var left = 1,
+                    right = this.pages,
+                    ar = [];
+                if (this.pages >= 7) {
+                    if (this.current_page > 5 && this.current_page < this.pages - 4) {
+                        left = Number(this.current_page) - 2;
+                        right = Number(this.current_page) + 2;
+                    } else {
+                        if (this.current_page <= 5) {
+                            left = 1;
+                            right = 7;
+                        } else {
+                            right = this.pages;
+                            left = this.pages - 6;
+                        }
+                    }
+                }
+                while (left <= right) {
+                    ar.push(left);
+                    left++;
+                }
+                return ar;
+            },
+        },
+        methods: {
+            jumpPage: function (id) {
+                var u  = this.pageurl
+
+                if(id<=1){
+                    window.location.href= '/' + u + "/" + id
+                }else if(id <= this.pages){
+                    window.location.href= '/' + u + "/" + id
+                }else{
+                    window.location.href='/' + u
+                }
+                return;
+            },
+        },
+    })
+</script>
+</body>
+
+{% endblock %}

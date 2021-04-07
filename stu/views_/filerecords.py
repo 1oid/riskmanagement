@@ -53,10 +53,10 @@ class FileRecordView(View):
 
                 for cache_item in cache_all:
 
-                    if str(cache_item.CacheName) in cache_set:
+                    if str(item.FileName) in cache_set:
                         continue
 
-                    cache_set.append(str(cache_item.CacheName))
+                    cache_set.append(str(item.FileName))
 
                     cache_all_count += 1
                     cache_list.append({

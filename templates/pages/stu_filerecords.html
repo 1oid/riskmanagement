@@ -91,7 +91,7 @@
                                               <tbody>
                                                 <tr v-for="cache in item.cache_all" :key="cache.id">
                                                   <td>{{ cache.filename }}</td>
-                                                  <td><img v-if="cache.is_img" class="viewer" @click="viewPhoto(cache.save_name)"  :src="'/static/files/images/'+cache.save_name"><span v-else><label class="label label-danger">无缩略图</label></span></td>
+                                                  <td><img v-if="cache.is_img" class="viewer" @click="viewPhoto(cache.save_name)"  :src="cache.save_name"><span v-else><label class="label label-danger">无缩略图</label></span></td>
 
                                                 </tr>
                                               </tbody>
@@ -104,7 +104,7 @@
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-body">
-                                            <img v-if="item.cache_one.is_img" class="viewer" @click="viewPhoto('/static/files/images/'+item.cache_one.path)" :src="'/static/files/images/'+item.cache_one.path">
+                                            <img v-if="item.cache_one.is_img" class="viewer" @click="viewPhoto(item.cache_one.path)" :src="item.cache_one.path">
                                         </div>
                                     </div><!-- /.modal-content -->
                                 </div><!-- /.modal -->

@@ -144,9 +144,13 @@ def get_computer_name_by_id(did):
         return did
 
 
-def download_file(_did, _fileid):
+def download_file(_did, _fileid, tag):
     """
     文件下载
+    tag:
+        1 - 风控
+        2 - 下载
+        3 - 拷贝
     :param _fileid:
     :return:
     """
@@ -155,7 +159,17 @@ def download_file(_did, _fileid):
     if not f:
         raise Http404
 
-    name = f.FileName.strip().split("\\")[-1]
+    if tag == 1:
+        name = UserFile.objects.filter(Did=_did, FileMd5=_fileid).last().FileName
+    elif tag == 2:
+        name = UserBroFile.objects.filter(Did=_did, FileMd5=_fileid).last().FileName
+    elif tag == 3:
+        name = UserFileCopy.objects.filter(Did=_did, FIleMD5=_fileid).last().FileName
+    else:
+        name = ""
+
+    name = name.strip().split("\\")[-1]
+    # name = UserFile.objects.filter(Did=_did, FileMd5=_fileid).last().FileName
     path = f.SaveName
 
     if '.zdat' in path:

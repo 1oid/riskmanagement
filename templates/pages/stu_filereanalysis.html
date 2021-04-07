@@ -55,7 +55,7 @@
                         <th>计算机名</th>
                         <th>文件名</th>
                           <th>大小</th>
-                          <th>MD5</th>
+                          <th>时间</th>
                           <th>描述</th>
                         <th>操作</th>
                       </tr>
@@ -65,7 +65,7 @@
                         <td>{{item.did}}</td>
                         <td>{{item.filename}}</td>
                         <td>{{item.filesize}}</td>
-                          <td>{{ item.md5 }}</td>
+                          <td>{{ item.other }}</td>
                           <td>{{ item.action }}</td>
                         <td>
                             <a class="btn btn-info btn-sm" :href="'/download/' + item.odid + '/'+ item.md5">下载</a>

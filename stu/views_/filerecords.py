@@ -24,9 +24,12 @@ class FileRecordView(View):
         elif 1000000000000 <= b:
             return '%.1f' % float(b / 1000000000000) + 'TB'
 
-    def get(self, request, page=1, did=None):
+    def get(self, request, page=1, did=None, tag=None):
         if did is not None:
-            objects = UserFile.objects.filter(Did=did)
+            if tag is None:
+                objects = UserFile.objects.filter(Did=did)
+            else:
+                objects = UserFile.objects.filter(Did=did, FileTag=tag)
         else:
             objects = UserFile.objects.all()
 

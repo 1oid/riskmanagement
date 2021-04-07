@@ -7,8 +7,13 @@ from django.core.paginator import Paginator
 
 class FileDownView(View):
 
-    def get(self, request, page=1):
-        objects = UserBroFile.objects.all()
+    def get(self, request, page=1, did=None):
+
+        if did is not None:
+            objects = UserBroFile.objects.filter(Did=did)
+        else:
+            objects = UserBroFile.objects.all()
+
         # count = objects.count()
         p = Paginator(objects, 10)
 

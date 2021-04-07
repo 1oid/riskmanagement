@@ -31,14 +31,20 @@ urlpatterns = [
     #
     path("filedownload", FileDownView.as_view()),
     path("filedownload/<int:page>", FileDownView.as_view()),
+    path("filedownload/detail/<str:did>", FileDownView.as_view()),
+    path("filedownload/detail/<str:did>/<int:page>", FileDownView.as_view()),
 
     path("filerecords", FileRecordView.as_view()),
     path("filerecords/<int:page>", FileRecordView.as_view()),
     path("filerecords/detail/<str:did>", FileRecordView.as_view()),
     path("filerecords/detail/<str:did>/<int:page>", FileRecordView.as_view()),
+    path("filerecords/detail_tag/<str:did>/<int:tag>", FileRecordView.as_view()),
+    path("filerecords/detail_tag/<str:did>/<int:tag>/<int:page>", FileRecordView.as_view()),
 
     path("analysis", AnalysisView.as_view()),
     path("analysis/<int:page>", AnalysisView.as_view()),
+    # path("analysis/detail/<str:did>", AnalysisView.as_view()),
+    # path("analysis/detail/<str:did>/<int:page>", AnalysisView.as_view()),
 
     path("terminal", TerminalView.as_view()),
     path("terminal/<int:page>", TerminalView.as_view()),

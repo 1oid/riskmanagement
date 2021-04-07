@@ -126,7 +126,7 @@ def run(db_file):
         _filename = item.FileName
         _did = item.Did
         _size = item.FileSize
-    
+
         # 打印保存
         if item.FileTag == 4:
             querysets.append(IntelliAnalysis(
@@ -137,7 +137,8 @@ def run(db_file):
                 md5=item.FileMd5,
                 description=item.KeyDesc,
                 duplicate=False if _md5 not in querysets_save else True,
-                action=1
+                action=1,
+                Other=item.Other
             ))
     
         # 下载
@@ -157,9 +158,10 @@ def run(db_file):
                 md5=dowload_item.FileMd5,
                 description=item.KeyDesc,
                 duplicate=False if _md5 not in querysets_save else True,
-                action=0
+                action=0,
+                Other=dowload_item.Other
             ))
-    
+
         # 拷贝
         objects_copy = UserFileCopy.objects.filter(
             Did=_did, FileName=_filename, FIleMD5=_md5
@@ -177,7 +179,8 @@ def run(db_file):
                 md5=copy_item.FIleMD5,
                 description=item.KeyDesc,
                 duplicate=False if _md5 not in querysets_save else True,
-                action=2
+                action=2,
+                Other=copy_item.Other
             ))
     
         # 外发
@@ -197,7 +200,8 @@ def run(db_file):
                 md5=net_item.FileMd5,
                 description=item.KeyDesc,
                 duplicate=False if _md5 not in querysets_save else True,
-                action=3
+                action=3,
+                Other=net_item.Other
             ))
     
     IntelliAnalysis.objects.bulk_create(querysets)

@@ -47,7 +47,7 @@ class AnalysisView(View):
         """
         pass
 
-    def get(self, request, page=1):
+    def get(self, request, page=1, did=None):
         objects = IntelliAnalysis.objects.all()
 
         # count = objects.count()

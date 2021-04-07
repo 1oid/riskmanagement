@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import View
 from django.core.paginator import Paginator
-from stu.models import IntelliAnalysis, UserDevice, UserFileCopy, UserFile
+from stu.models import IntelliAnalysis, UserDevice, UserFileCopy, UserFile, UserBroFile
 from stu.views_.core import menu, pcinfo
 from django.db.models import Q
 
@@ -11,6 +11,8 @@ class TerminalView(View):
     一条记录一个机器信息，机器名，IP，MAC，备注，
     文件风控（计数）
     文件拷贝（计数）...
+    文件打印
+    文件下载
     点这个计数就可以看到这个机器的对应的记录数
     """
     def get(self, request, page=1):
@@ -23,6 +25,8 @@ class TerminalView(View):
 
             relationDidsWithUserFileCopy = UserFileCopy.objects.filter(Did=item.DId).count()
             relationDidsWithUserFile = UserFile.objects.filter(Did=item.DId).count()
+            relationDidsWithDownloadFile = UserBroFile.objects.filter(Did=item.DId).count()
+            relationDidsWithPrintFile = UserFile.objects.filter(Did=item.DId, FileTag=4).count()
 
             results.append({
                 "info": {
@@ -34,7 +38,9 @@ class TerminalView(View):
                 },
                 "count": {
                     "risk": relationDidsWithUserFile,
-                    "copy": relationDidsWithUserFileCopy
+                    "copy": relationDidsWithUserFileCopy,
+                    "download": relationDidsWithDownloadFile,
+                    "print": relationDidsWithPrintFile
                 }
             })
 

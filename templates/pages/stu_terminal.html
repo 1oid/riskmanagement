@@ -61,6 +61,8 @@
                         <th>IP</th>
                         <th>MAC</th>
                         <th>备注</th>
+                        <th>文件下载数量</th>
+                        <th>文件打印数量</th>
                         <th>文件风控数量</th>
                         <th>文件拷贝数量</th>
                       </tr>
@@ -71,6 +73,8 @@
                         <td>{{item.info.ip}}</td>
                         <td>{{item.info.mac}}</td>
                         <td>{{item.info.remark}}</td>
+                        <td style="text-align: center;text-decoration: underline"><a :href="'/filedownload/detail/'+item.info.did">{{item.count.download}}</a></td>
+                        <td style="text-align: center;text-decoration: underline"><a :href="'/filerecords/detail_tag/'+item.info.did+'/4'">{{item.count.print}}</a></td>
                         <td style="text-align: center;text-decoration: underline"><a :href="'/filerecords/detail/'+item.info.did">{{item.count.risk}}</a></td>
                         <td style="text-align: center;text-decoration: underline"><a :href="'/filecopy/detail/'+item.info.did">{{item.count.copy}}</a></td>
                       </tr>

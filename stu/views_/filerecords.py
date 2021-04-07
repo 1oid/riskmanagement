@@ -34,10 +34,16 @@ class FileRecordView(View):
             objects = UserFile.objects.all()
 
         results = []
+        name_set = []
 
         for item in objects:
             cache_list = []
             cache_all_count = 0
+
+            if str(item.FileName) in name_set:
+                continue
+
+            name_set.append(str(item.FileName))
 
             try:
                 cache_all = CacheFile.objects.filter(identifier=item.Did, MD5=item.FileMd5)

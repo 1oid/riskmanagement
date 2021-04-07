@@ -73,6 +73,6 @@ urlpatterns = [
     # path("recents", RecentsView.as_view()),
     # path("recents/<int:page>", RecentsView.as_view())
 
-    path("download/<str:did>/<str:fid>", DownloadView.as_view())
+    path("download/<int:tag>/<str:did>/<str:fid>", DownloadView.as_view())
 
 ]

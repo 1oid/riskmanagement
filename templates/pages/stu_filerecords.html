@@ -70,7 +70,7 @@
                           <td>{{ item.filesize }}</td>
                           <td>{{ item.Other }}</td>
                         <td>
-                            <a class="btn btn-info btn-sm" :href="'/download/' + item.odid + '/'+ item.md5">下载</a>
+                            <a class="btn btn-info btn-sm" :href="'/download/1/' + item.odid + '/'+ item.md5">下载</a>
                             <button v-if="item.cache_all_count > 0" class="btn btn-primary btn-sm" data-toggle="modal" :data-target="'#viewList'+item.id">
                                 <span>查看({{ item.cache_all_count }})</span>
                             </button>

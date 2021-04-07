@@ -49,7 +49,15 @@ class FileRecordView(View):
                 cache_all = CacheFile.objects.filter(identifier=item.Did, MD5=item.FileMd5)
                 cache_one = cache_all.filter(CacheName=item.FileName).first()
 
+                cache_set = []
+
                 for cache_item in cache_all:
+
+                    if str(cache_item.CacheName) in cache_set:
+                        continue
+
+                    cache_set.append(str(cache_item.CacheName))
+
                     cache_all_count += 1
                     cache_list.append({
                         "id": cache_item.id,

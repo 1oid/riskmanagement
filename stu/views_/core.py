@@ -155,7 +155,7 @@ def download_file(_did, _fileid):
     if not f:
         raise Http404
 
-    name = f.filename.strip().split("\\")[-1]
+    name = f.FileName.strip().split("\\")[-1]
     path = f.SaveName
 
     if '.zdat' in path:

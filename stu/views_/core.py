@@ -5,6 +5,7 @@ import zipfile
 from manage.settings import DOWNLOAD_ROOT, BASE_DIR
 from manage.wsgi import *
 from stu.models import *
+from django.utils.encoding import escape_uri_path
 
 
 def menu():
@@ -168,9 +169,7 @@ def download_file(_did, _fileid, tag):
     else:
         name = ""
 
-    print(name)
     name = name.strip().split("\\")[-1]
-    # name = UserFile.objects.filter(Did=_did, FileMd5=_fileid).last().FileName
     path = f.SaveName
 
     if '.zdat' in path:
@@ -185,7 +184,7 @@ def download_file(_did, _fileid, tag):
 
     response = FileResponse(file)
     response['Content-Type'] = 'application/octet-stream'
-    response['Content-Disposition'] = 'attachment;filename="{}"'.format(name)
+    response['Content-Disposition'] = f'attachment;filename="{escape_uri_path(name)}"'
     return response
 
 

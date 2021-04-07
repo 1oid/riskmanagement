@@ -5,7 +5,7 @@ class UserDevice(models.Model):
     """
     计算机信息表
     """
-    DId = models.TextField(default="", verbose_name="计算ID")
+    DId = models.TextField(default="", verbose_name="计算ID", unique=True)
     DMac = models.TextField(default="", verbose_name="Mac地址")
     DIp = models.TextField(default="", verbose_name="IP地址")
     DName = models.TextField(default="", verbose_name="计算机名")

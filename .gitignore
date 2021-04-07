@@ -1,3 +1,7 @@
+importdb.py
+migrations/
+db.sqlite3
+manage/settings.py
 # Byte-compiled / optimized / DLL files
 user/migrations/
 .idea/

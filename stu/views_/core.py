@@ -150,17 +150,13 @@ def download_file(_did, _fileid):
     :param _fileid:
     :return:
     """
-    f = IntelliAnalysis.objects.filter(did=_did, md5=_fileid).last()
+    f = CacheFile.objects.filter(identifier=_did, MD5=_fileid).last()
 
     if not f:
         raise Http404
 
     name = f.filename.strip().split("\\")[-1]
-    path = os.path.join(DOWNLOAD_ROOT, f.filepath.strip().split("\\")[-1])
-
-    print(name)
-    print(path)
-    print(".zdat" in path)
+    path = f.SaveName
 
     if '.zdat' in path:
         zf = zipfile.ZipFile(path)

@@ -7,7 +7,7 @@ sys.path.append(path)
 
 from manage.wsgi import *
 from stu.models import *
-from manage.settings import DATASOURCE
+from manage.settings import DATASOURCE, DATASOURCE_FILEINFO_DAT3
 
 
 def importDb(keyarray, _table, objects, db_file):
@@ -20,7 +20,12 @@ def importDb(keyarray, _table, objects, db_file):
         if objects.objects.filter(**dict(zip(keyarray, row[1:]))).count() > 0:
             continue
 
-        objects.objects.create(**dict(zip(keyarray, row[1:])))
+        try:
+            objects.objects.create(**dict(zip(keyarray, row[1:])))
+        except Exception as e:
+            print("[ERROR] {}".format(e))
+            continue
+
         count += 1
     print("\t{} 增加{}条数据".format(_table, count))
     cursor.close()
@@ -223,23 +228,21 @@ def dir_scans(path):
         ext = _file.strip().split(".")[-1]
         _fullpath = path + "/" + _file
 
-        if ext == "dat3":
-            if "DataInfo" in _file:
-                print("READ {}".format(_fullpath))
-                run(_fullpath)
-                print("DELETE {}".format(_fullpath))
-                os.remove(_fullpath)
-            elif "FileInfor" in _file:
-                print("READ {}".format(_fullpath))
-                cache_read(_fullpath)
-                print("DELETE {}".format(_fullpath))
-                os.remove(_fullpath)
+        if ext == "dat3" and "DataInfo" in _file:
+            print("READ {}".format(_fullpath))
+            run(_fullpath)
+            print("DELETE {}".format(_fullpath))
+            os.remove(_fullpath)
         elif ext == "txt":
-                print("READ {}".format(_fullpath))
-                read_txt(_fullpath)
-                print("DELETE {}".format(_fullpath))
-                os.remove(_fullpath)
+            print("READ {}".format(_fullpath))
+            read_txt(_fullpath)
+            print("DELETE {}".format(_fullpath))
+            os.remove(_fullpath)
             # os.remove(path + "/" + _file)
+
+    print("READ {}".format(DATASOURCE_FILEINFO_DAT3))
+    cache_read(DATASOURCE_FILEINFO_DAT3)
+    print("DELETE {}".format(DATASOURCE_FILEINFO_DAT3))
 
 
 def read_txt(txt):

@@ -128,3 +128,6 @@ DOWNLOAD_ROOT = '/Users/loid/Downloads/SICHUAN/test/Cache/660a87ac52980f065fcbb1
 
 # 数据导入文件夹配置，检测和导入数据在这个文件夹中
 DATASOURCE = '/Users/loid/Downloads/SICHUAN'
+
+# WF FileInfo.dat3路径
+DATASOURCE_FILEINFO_DAT3 = '/Users/loid/Downloads/SICHUAN/test/Config/WF_FileInfor.dat3'

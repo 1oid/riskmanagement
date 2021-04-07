@@ -48,7 +48,7 @@ class FileRecordView(View):
                     cache_list.append({
                         "id": cache_item.id,
                         "cache_name": cache_item.CacheName,
-                        "save_name": cache_item.SaveName.split("\\")[-1],
+                        "save_name": "/image/{}/{}".format(cache_item.identifier, cache_item.MD5),
                         "is_img": cache_item.IsImge,
                         "filename": item.FileName,
                     })

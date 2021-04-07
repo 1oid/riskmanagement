@@ -76,5 +76,5 @@ urlpatterns = [
 
     path("download/<int:tag>/<str:did>/<str:fid>", DownloadView.as_view()),
 
-    path("image/<int:did>/<str:md5>", ImageView.as_view())
+    path("image/<str:did>/<str:md5>", ImageView.as_view())
 ]

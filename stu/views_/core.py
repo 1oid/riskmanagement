@@ -8,6 +8,11 @@ from stu.models import *
 from django.utils.encoding import escape_uri_path
 
 
+def image_gener(path):
+    with open(path, 'rb') as f:
+        return f.read()
+
+
 def menu():
     return [
                 {

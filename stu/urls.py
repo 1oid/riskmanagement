@@ -4,6 +4,7 @@ from stu.views_.download import DownloadView
 from stu.views_.filecopy import FileCopyView
 from stu.views_.filedownload import FileDownView
 from stu.views_.filerecords import FileRecordView
+from stu.views_.imageView import ImageView
 from stu.views_.index import IndexView
 # from stu.views_.fileinfo import SensitiveView, TrojanView
 # from stu.views_.installapp import InstalledAppView
@@ -73,6 +74,7 @@ urlpatterns = [
     # path("recents", RecentsView.as_view()),
     # path("recents/<int:page>", RecentsView.as_view())
 
-    path("download/<int:tag>/<str:did>/<str:fid>", DownloadView.as_view())
+    path("download/<int:tag>/<str:did>/<str:fid>", DownloadView.as_view()),
 
+    path("image/<int:did>/<str:md5>", ImageView.as_view())
 ]

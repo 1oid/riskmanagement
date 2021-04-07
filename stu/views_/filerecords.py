@@ -53,10 +53,10 @@ class FileRecordView(View):
 
                 for cache_item in cache_all:
 
-                    # if "/image/{}/{}".format(cache_item.identifier, cache_item.MD5) in cache_set:
-                    #     continue
-                    #
-                    # cache_set.append("/image/{}/{}".format(cache_item.identifier, cache_item.MD5))
+                    if "/image/{}/{}".format(cache_item.identifier, cache_item.MD5) in cache_set:
+                        continue
+
+                    cache_set.append("/image/{}/{}".format(cache_item.identifier, cache_item.MD5))
 
                     cache_all_count += 1
                     cache_list.append({

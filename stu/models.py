@@ -203,7 +203,7 @@ class UserFile(models.Model):
     FileSize = models.IntegerField(default=0, verbose_name="文件大小")
     FileTag = models.IntegerField(default=0, verbose_name="1敏感、2木马、3重复、4打印、6伪装")
     IsDup = models.IntegerField(default=0, verbose_name="是否重复")
-    FileMd5 = models.TextField(default="", verbose_name="文件MD5")
+    FileMd5 = models.TextField(default="", verbose_name="文件MD5", unique=True)
     FileAttribute = models.TextField(default="", verbose_name="文件属性")
     FileNumber = models.IntegerField(default=0, verbose_name="文件访问次数")
     FileDesc = models.TextField(default="", verbose_name="文件描述")

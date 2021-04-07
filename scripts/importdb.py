@@ -2,6 +2,7 @@ import sqlite3
 import sys
 import os
 # 环境变量配置
+#
 path = "/Users/loid/PycharmProjects/manage"
 sys.path.append(path)
 

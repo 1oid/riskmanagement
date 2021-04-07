@@ -46,7 +46,7 @@ class FileRecordView(View):
             name_set.append(str(item.FileName))
 
             try:
-                cache_all = CacheFile.objects.filter(identifier=item.Did, MD5=item.FileMd5)
+                cache_all = CacheFile.objects.filter(identifier=item.Did, MD5=item.FileMd5).order_by("-IsImge")
                 cache_one = cache_all.filter(CacheName=item.FileName).first()
 
                 cache_set = []

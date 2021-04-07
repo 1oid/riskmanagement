@@ -168,6 +168,7 @@ def download_file(_did, _fileid, tag):
     else:
         name = ""
 
+    print(name)
     name = name.strip().split("\\")[-1]
     # name = UserFile.objects.filter(Did=_did, FileMd5=_fileid).last().FileName
     path = f.SaveName

@@ -78,6 +78,7 @@ class FileRecordView(View):
                 "remark": item.ContentRemark[:40],
                 "keyword": item.KeyDesc,
                 "md5": item.FileMd5,
+                "filetype": item.FileType,
                 "cache_one": {
                     "filename": item.FileName,
                     "cache": cache_one.CacheName if cache_one else "",

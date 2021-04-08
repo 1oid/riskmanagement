@@ -41,6 +41,28 @@ class FileRecordView(View):
             cache_all_count = 0
 
             if str(item.FileName) in name_set:
+                try:
+                    cache_all2 = CacheFile.objects.filter(identifier=item.Did, MD5=item.FileMd5, IsImge=1).order_by(
+                        "-IsImge")
+
+                    for cache_item in cache_all2:
+
+                        if "/image/{}/{}".format(cache_item.identifier, cache_item.MD5) in cache_set:
+                            continue
+
+                        cache_set.append("/image/{}/{}".format(cache_item.identifier, cache_item.MD5))
+
+                        cache_all_count += 1
+                        cache_list.append({
+                            "id": cache_item.id,
+                            "cache_name": cache_item.CacheName,
+                            "save_name": "/image/{}/{}".format(cache_item.identifier, cache_item.MD5),
+                            "is_img": cache_item.IsImge,
+                            "filename": item.FileName,
+                        })
+
+                except CacheFile.DoesNotExist:
+                    continue
                 continue
 
             name_set.append(str(item.FileName))

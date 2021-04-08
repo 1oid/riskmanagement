@@ -65,6 +65,7 @@ class AnalysisView(View):
             result_set.append(_)
             _cache = CacheFile.objects.filter(identifier=item.did, MD5=item.md5, IsImge=1).last()
 
+            print(_cache)
             results.append({
                     "id": item.id,
                     "did": get_computer_name_by_id(item.did),

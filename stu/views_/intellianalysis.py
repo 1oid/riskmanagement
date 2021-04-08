@@ -122,6 +122,7 @@ class AnalysisView(View):
             except CacheFile.DoesNotExist:
                 continue
 
+            print(item.id, item.md5)
             results.append({
                     "id": item.id,
                     "did": get_computer_name_by_id(item.did),

@@ -76,49 +76,49 @@ class FileRecordView(View):
             else:
                 name_set.append(str(item.FileName))
 
-            try:
-                cache_all = CacheFile.objects.filter(identifier=item.Did, MD5=item.FileMd5, IsImge=1).order_by("-IsImge")
-                cache_one = cache_all.filter(CacheName=item.FileName).first()
+                try:
+                    cache_all = CacheFile.objects.filter(identifier=item.Did, MD5=item.FileMd5, IsImge=1).order_by("-IsImge")
+                    cache_one = cache_all.filter(CacheName=item.FileName).first()
 
-                for cache_item in cache_all:
+                    for cache_item in cache_all:
 
-                    if "/image/{}/{}".format(cache_item.identifier, cache_item.MD5) in cache_set:
-                        continue
+                        if "/image/{}/{}".format(cache_item.identifier, cache_item.MD5) in cache_set:
+                            continue
 
-                    cache_set.append("/image/{}/{}".format(cache_item.identifier, cache_item.MD5))
+                        cache_set.append("/image/{}/{}".format(cache_item.identifier, cache_item.MD5))
 
-                    print("Main Cache: ", cache_item.identifier, cache_item.MD5)
-                    cache_all_count += 1
-                    cache_list.append({
-                        "id": cache_item.id,
-                        "cache_name": cache_item.CacheName,
-                        "save_name": "/image/{}/{}".format(cache_item.identifier, cache_item.MD5),
-                        "is_img": cache_item.IsImge,
+                        print("Main Cache: ", cache_item.identifier, cache_item.MD5)
+                        cache_all_count += 1
+                        cache_list.append({
+                            "id": cache_item.id,
+                            "cache_name": cache_item.CacheName,
+                            "save_name": "/image/{}/{}".format(cache_item.identifier, cache_item.MD5),
+                            "is_img": cache_item.IsImge,
+                            "filename": item.FileName,
+                        })
+
+                except CacheFile.DoesNotExist:
+                    continue
+
+                results.append({
+                    "id": item.id,
+                    "odid": item.Did,
+                    "filename": item.FileName.split("\\")[-1],
+                    "filesize": self.size_format(item.FileSize),
+                    "remark": item.ContentRemark[:40],
+                    "keyword": item.KeyDesc,
+                    "md5": item.FileMd5,
+                    "filetype": item.FileType,
+                    "cache_one": {
                         "filename": item.FileName,
-                    })
-
-            except CacheFile.DoesNotExist:
-                continue
-
-            results.append({
-                "id": item.id,
-                "odid": item.Did,
-                "filename": item.FileName.split("\\")[-1],
-                "filesize": self.size_format(item.FileSize),
-                "remark": item.ContentRemark[:40],
-                "keyword": item.KeyDesc,
-                "md5": item.FileMd5,
-                "filetype": item.FileType,
-                "cache_one": {
-                    "filename": item.FileName,
-                    "cache": cache_one.CacheName if cache_one else "",
-                    "path": cache_one.SaveName.split("\\")[-1] if cache_one else "",
-                    "is_img": cache_one.IsImge if cache_one else ""
-                } if cache_one else 0,
-                "cache_all": cache_list,
-                "cache_all_count": cache_all_count,
-                "Other": item.Other
-            })
+                        "cache": cache_one.CacheName if cache_one else "",
+                        "path": cache_one.SaveName.split("\\")[-1] if cache_one else "",
+                        "is_img": cache_one.IsImge if cache_one else ""
+                    } if cache_one else 0,
+                    "cache_all": cache_list,
+                    "cache_all_count": cache_all_count,
+                    "Other": item.Other
+                })
 
         # count = objects.count()
         p = Paginator(results, 10)

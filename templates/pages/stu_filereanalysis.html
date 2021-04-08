@@ -69,7 +69,7 @@
                           <td>{{ item.action }}</td>
                         <td>
                             <a class="btn btn-info btn-sm" :href="'/download/' + item.odid + '/'+ item.md5">下载</a>
-                            <button v-if="item.cache_all_count" class="btn btn-primary btn-sm" data-toggle="modal" :data-target="'#viewList'+item.id">
+                            <button v-if="item.is_img" class="btn btn-primary btn-sm" data-toggle="modal" :data-target="'#viewList'+item.id">
                                 <span>查看{{ item.cache_all_count }}</span>
                             </button>
 

@@ -45,12 +45,14 @@ class FileRecordView(View):
                     cache_all2 = CacheFile.objects.filter(identifier=item.Did, MD5=item.FileMd5, IsImge=1).order_by(
                         "-IsImge")
 
+                    cache_set2 = []
+
                     for cache_item in cache_all2:
 
-                        if "/image/{}/{}".format(cache_item.identifier, cache_item.MD5) in cache_set:
+                        if "/image/{}/{}".format(cache_item.identifier, cache_item.MD5) in cache_set2:
                             continue
 
-                        cache_set.append("/image/{}/{}".format(cache_item.identifier, cache_item.MD5))
+                        cache_set2.append("/image/{}/{}".format(cache_item.identifier, cache_item.MD5))
 
                         cache_all_count += 1
                         cache_list.append({

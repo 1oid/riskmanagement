@@ -54,6 +54,7 @@ class FileRecordView(View):
                         cache_one = cache_all.filter(CacheName=_reply.FileName).first()
 
                         for cache_item in cache_all:
+                            print(cache_item)
 
                             if "/image/{}/{}".format(cache_item.identifier, cache_item.MD5) in cache_set:
                                 continue

@@ -54,7 +54,7 @@ class FileRecordView(View):
                         cache_one = cache_all.filter(CacheName=_reply.FileName).first()
 
                         for cache_item in cache_all:
-                            print(cache_item)
+                            print("Other: ", cache_item.identifier, cache_item.MD5)
 
                             if "/image/{}/{}".format(cache_item.identifier, cache_item.MD5) in cache_set:
                                 continue
@@ -88,6 +88,7 @@ class FileRecordView(View):
 
                     cache_set.append("/image/{}/{}".format(cache_item.identifier, cache_item.MD5))
 
+                    print("Main Cache: ", cache_item.identifier, cache_item.MD5)
                     cache_all_count += 1
                     cache_list.append({
                         "id": cache_item.id,

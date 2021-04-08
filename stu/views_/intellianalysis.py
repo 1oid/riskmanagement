@@ -76,6 +76,8 @@ class AnalysisView(View):
                                                          IsImge=1).order_by(
                         "-IsImge")
 
+                    print("ANALYSIY: ", cache_all.count())
+
                     for cache_item in cache_all:
 
                         if "/image/{}/{}".format(cache_item.identifier, cache_item.MD5) in cache_set:

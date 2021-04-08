@@ -100,25 +100,20 @@ class FileRecordView(View):
                 except CacheFile.DoesNotExist:
                     continue
 
-                results.append({
-                    "id": item.id,
-                    "odid": item.Did,
-                    "filename": item.FileName.split("\\")[-1],
-                    "filesize": self.size_format(item.FileSize),
-                    "remark": item.ContentRemark[:40],
-                    "keyword": item.KeyDesc,
-                    "md5": item.FileMd5,
-                    "filetype": item.FileType,
-                    "cache_one": {
-                        "filename": item.FileName,
-                        "cache": cache_one.CacheName if cache_one else "",
-                        "path": cache_one.SaveName.split("\\")[-1] if cache_one else "",
-                        "is_img": cache_one.IsImge if cache_one else ""
-                    } if cache_one else 0,
-                    "cache_all": cache_list,
-                    "cache_all_count": cache_all_count,
-                    "Other": item.Other
-                })
+            results.append({
+                "id": item.id,
+                "odid": item.Did,
+                "filename": item.FileName.split("\\")[-1],
+                "filesize": self.size_format(item.FileSize),
+                "remark": item.ContentRemark[:40],
+                "keyword": item.KeyDesc,
+                "md5": item.FileMd5,
+                "filetype": item.FileType,
+                "cache_one": 0,
+                "cache_all": cache_list,
+                "cache_all_count": cache_all_count,
+                "Other": item.Other
+            })
 
         # count = objects.count()
         p = Paginator(results, 10)

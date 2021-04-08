@@ -72,7 +72,6 @@ class FileRecordView(View):
 
                     except CacheFile.DoesNotExist:
                         continue
-                continue
 
             else:
                 name_set.append(str(item.FileName))

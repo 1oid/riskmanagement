@@ -69,8 +69,8 @@
                           <td>{{ item.action }}</td>
                         <td>
                             <a class="btn btn-info btn-sm" :href="'/download/' + item.odid + '/'+ item.md5">下载</a>
-                            <button class="btn btn-primary btn-sm" data-toggle="modal" :data-target="'#viewList'+item.id">
-                                <span>查看</span>
+                            <button v-if="item.cache_all_count" class="btn btn-primary btn-sm" data-toggle="modal" :data-target="'#viewList'+item.id">
+                                <span>查看{{ item.cache_all_count }}</span>
                             </button>
 
                              <div class="modal fade" :id="'viewList'+item.id" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -84,11 +84,11 @@
                                                   <th>类型</th>
                                                     <th>关键字</th>
                                                     <th>标签</th>
-                                                    <th>时间</th>
+                                                    <th>缩略图</th>
                                                 </tr>
                                               </thead>
                                               <tbody>
-                                                <tr v-for="file in item.file_all">
+                                                <tr v-for="file in item.cache_all">
                                                   <td>{{ file.filename }}</td>
                                                   <td>
                                                       <label v-if="file.filetype == 1" class="label label-warning">敏感</label>
@@ -101,7 +101,12 @@
                                                         <label v-if="file.filetag == 1">敏感文档</label>
                                                         <label v-if="file.filetag == 2">木马</label>
                                                     </td>
-                                                    <td>{{ file.Other }}</td>
+                                                    <td>
+                                                        <img v-if="file.is_img" class="viewer" @click="viewPhoto(file.save_name)"  :src="file.save_name">
+                                                        <span v-else>
+                                                            <label class="label label-danger">无缩略图</label>
+                                                        </span>
+                                                    </td>
                                                 </tr>
                                               </tbody>
                                             </table>
@@ -145,11 +150,13 @@
 </div>
 </div>
     {% endverbatim vueblock %}
+    <link rel="stylesheet" href="/static/css/viewer.min.css">
 <script type="text/javascript" src="/static/js/jquery.min.js"></script>
 <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="/static/js/perfect-scrollbar.min.js"></script>
 <script type="text/javascript" src="/static/js/main.min.js"></script>
 <script type="text/javascript" src="/static/js/vue.min.js"></script>
+<script src="/static/js/viewer.min.js"></script>
 <script type="text/javascript">
 var obj = {{ obj | safe }}
 
@@ -229,5 +236,23 @@ var obj = {{ obj | safe }}
            }
        },
    })
+
+
+var $image = $('#image');
+
+$image.viewer({
+  inline: true,
+    viewed() {
+        viewer.zoomTo(1);
+      },
+});
+
+// Get the Viewer.js instance after initialized
+var viewer = $image.data('viewer');
+
+// View a list of images
+$('#app').viewer({
+    navbar: false
+})
 </script>
 {% endblock %}

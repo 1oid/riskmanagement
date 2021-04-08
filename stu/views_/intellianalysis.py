@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import View
 from django.core.paginator import Paginator
-from stu.models import IntelliAnalysis, UserBroFile, UserFile, UserNetWork, UserFileCopy
+from stu.models import IntelliAnalysis, UserBroFile, UserFile, UserNetWork, UserFileCopy, CacheFile
 from stu.views_.core import menu, pcinfo, get_computer_name_by_id
 
 
@@ -57,12 +57,68 @@ class AnalysisView(View):
         result_set = []
 
         for item in objects:
+            cache_list = []
+            cache_all_count = 0
+            cache_set = []
 
+            # 拒绝重复
             _ = "{}_{}".format(item.md5, item.action)
+
             if _ in result_set:
                 continue
 
+            # 找到除当前之外的同名文件
+            _reply_objects = IntelliAnalysis.objects.filter(filename=item.filename).exclude(id=item.id)
+
+            for _reply in _reply_objects:
+                try:
+                    cache_all = CacheFile.objects.filter(identifier=_reply.did, MD5=_reply.md5,
+                                                         IsImge=1).order_by(
+                        "-IsImge")
+
+                    for cache_item in cache_all:
+
+                        if "/image/{}/{}".format(cache_item.identifier, cache_item.MD5) in cache_set:
+                            continue
+
+                        cache_set.append("/image/{}/{}".format(cache_item.identifier, cache_item.MD5))
+
+                        cache_all_count += 1
+                        cache_list.append({
+                            "id": cache_item.id,
+                            "cache_name": cache_item.CacheName,
+                            "save_name": "/image/{}/{}".format(cache_item.identifier, cache_item.MD5),
+                            "is_img": cache_item.IsImge,
+                            "filename": _reply.FileName,
+                        })
+
+                except CacheFile.DoesNotExist:
+                    continue
+
             result_set.append(_)
+
+            try:
+                cache_all = CacheFile.objects.filter(identifier=item.did, MD5=item.md5, IsImge=1).order_by(
+                    "-IsImge")
+
+                for cache_item in cache_all:
+
+                    if "/image/{}/{}".format(cache_item.identifier, cache_item.MD5) in cache_set:
+                        continue
+
+                    cache_set.append("/image/{}/{}".format(cache_item.identifier, cache_item.MD5))
+
+                    cache_all_count += 1
+                    cache_list.append({
+                        "id": cache_item.id,
+                        "cache_name": cache_item.CacheName,
+                        "save_name": "/image/{}/{}".format(cache_item.identifier, cache_item.MD5),
+                        "is_img": cache_item.IsImge,
+                        "filename": item.FileName,
+                    })
+
+            except CacheFile.DoesNotExist:
+                continue
 
             results.append({
                     "id": item.id,
@@ -75,6 +131,8 @@ class AnalysisView(View):
                     "description": item.description,
                     "duplicate": 1 if item.duplicate else 0,
                     "action": item.get_action_string(),
+                    "cache_all": cache_list,
+                    "cache_all_count": cache_all_count,
                     "other": item.Other.strftime("%Y-%m-%d %H:%I:%S")
                 })
 

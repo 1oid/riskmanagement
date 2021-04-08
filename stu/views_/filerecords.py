@@ -48,7 +48,6 @@ class FileRecordView(View):
             else:
                 # 找到除当前之外的同名文件
                 _reply_objects = UserFile.objects.filter(FileName=item.FileName).exclude(id=item.id)
-                print(_reply_objects)
 
                 for _reply in _reply_objects:
                     try:
@@ -58,7 +57,6 @@ class FileRecordView(View):
                         cache_one = cache_all.filter(CacheName=_reply.FileName).first()
 
                         for cache_item in cache_all:
-                            print("Other: ", cache_item.identifier, cache_item.MD5)
 
                             if "/image/{}/{}".format(cache_item.identifier, cache_item.MD5) in cache_set:
                                 continue
@@ -90,7 +88,6 @@ class FileRecordView(View):
 
                         cache_set.append("/image/{}/{}".format(cache_item.identifier, cache_item.MD5))
 
-                        print("Main Cache: ", cache_item.identifier, cache_item.MD5)
                         cache_all_count += 1
                         cache_list.append({
                             "id": cache_item.id,

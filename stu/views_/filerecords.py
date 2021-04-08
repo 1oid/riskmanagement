@@ -43,13 +43,17 @@ class FileRecordView(View):
 
             # 如果名字重复了,
             if str(item.FileName) in name_set:
+                continue
+
+            else:
                 # 找到除当前之外的同名文件
                 _reply_objects = UserFile.objects.filter(FileName=item.FileName).exclude(id=item.id)
                 print(_reply_objects)
 
                 for _reply in _reply_objects:
                     try:
-                        cache_all = CacheFile.objects.filter(identifier=_reply.Did, MD5=_reply.FileMd5, IsImge=1).order_by(
+                        cache_all = CacheFile.objects.filter(identifier=_reply.Did, MD5=_reply.FileMd5,
+                                                             IsImge=1).order_by(
                             "-IsImge")
                         cache_one = cache_all.filter(CacheName=_reply.FileName).first()
 
@@ -73,7 +77,6 @@ class FileRecordView(View):
                     except CacheFile.DoesNotExist:
                         continue
 
-            else:
                 name_set.append(str(item.FileName))
 
                 try:

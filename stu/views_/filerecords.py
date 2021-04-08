@@ -45,6 +45,7 @@ class FileRecordView(View):
             if str(item.FileName) in name_set:
                 # 找到除当前之外的同名文件
                 _reply_objects = UserFile.objects.filter(FileName=item.FileName).exclude(id=item.id)
+                print(_reply_objects)
 
                 for _reply in _reply_objects:
                     try:

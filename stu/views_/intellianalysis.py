@@ -53,14 +53,18 @@ class AnalysisView(View):
         # count = objects.count()
         p = Paginator(objects, 10)
 
-        obj = {
-            "current_page": page,
-            "pages": p.num_pages,
-            "changePage": "",
-            "pageurl": "analysis",
-            "nowIndex": 0,
-            "topData": [
-                {
+        results = []
+        result_set = []
+
+        for item in objects:
+
+            _ = "{}_{}".format(item.md5, item.action)
+            if _ in result_set:
+                continue
+
+            result_set.append(_)
+
+            results.append({
                     "id": item.id,
                     "did": get_computer_name_by_id(item.did),
                     "odid": item.did,
@@ -72,8 +76,15 @@ class AnalysisView(View):
                     "duplicate": 1 if item.duplicate else 0,
                     "action": item.get_action_string(),
                     "other": item.Other.strftime("%Y-%m-%d %H:%I:%S")
-                } for item in objects
-            ],
+                })
+
+        obj = {
+            "current_page": page,
+            "pages": p.num_pages,
+            "changePage": "",
+            "pageurl": "analysis",
+            "nowIndex": 0,
+            "topData": results,
             "toptotal": p.count,
             "current_name": "智慧分析",
             "current_url": "analysis",

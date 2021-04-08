@@ -72,8 +72,7 @@ class AnalysisView(View):
             for _reply in _reply_objects:
                 try:
                     cache_all = CacheFile.objects.filter(identifier=_reply.did, MD5=_reply.md5,
-                                                         IsImge=1).order_by(
-                        "-IsImge")
+                                                         IsImge=1).order_by("-IsImge")
 
                     for cache_item in cache_all:
 
@@ -81,7 +80,7 @@ class AnalysisView(View):
                             continue
 
                         cache_set.append("/image/{}/{}".format(cache_item.identifier, cache_item.MD5))
-
+                        print("/image/{}/{}".format(cache_item.identifier, cache_item.MD5))
                         cache_all_count += 1
                         cache_list.append({
                             "id": cache_item.id,
@@ -90,7 +89,6 @@ class AnalysisView(View):
                             "is_img": cache_item.IsImge,
                             "filename": _reply.FileName,
                         })
-
                 except CacheFile.DoesNotExist:
                     continue
 
@@ -115,7 +113,6 @@ class AnalysisView(View):
                         "is_img": cache_item.IsImge,
                         "filename": item.FileName,
                     })
-
             except CacheFile.DoesNotExist:
                 continue
 

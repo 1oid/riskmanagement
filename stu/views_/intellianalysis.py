@@ -62,21 +62,18 @@ class AnalysisView(View):
             cache_set = []
 
             # 拒绝重复
-            _ = "{}_{}".format(item.md5, item.action)
-
-            if _ in result_set:
+            if str(item.filename) in result_set:
                 continue
 
             # 找到除当前之外的同名文件
             _reply_objects = IntelliAnalysis.objects.filter(filename=item.filename).exclude(id=item.id)
+            print("ANALYSIY: ", _reply_objects.count())
 
             for _reply in _reply_objects:
                 try:
                     cache_all = CacheFile.objects.filter(identifier=_reply.did, MD5=_reply.md5,
                                                          IsImge=1).order_by(
                         "-IsImge")
-
-                    print("ANALYSIY: ", cache_all.count())
 
                     for cache_item in cache_all:
 
@@ -97,7 +94,7 @@ class AnalysisView(View):
                 except CacheFile.DoesNotExist:
                     continue
 
-            result_set.append(_)
+            result_set.append(item.filename)
 
             try:
                 cache_all = CacheFile.objects.filter(identifier=item.did, MD5=item.md5, IsImge=1).order_by(

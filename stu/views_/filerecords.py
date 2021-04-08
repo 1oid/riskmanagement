@@ -39,41 +39,45 @@ class FileRecordView(View):
         for item in objects:
             cache_list = []
             cache_all_count = 0
+            cache_set = []
 
+            # 如果名字重复了,
             if str(item.FileName) in name_set:
-                try:
-                    cache_all2 = CacheFile.objects.filter(identifier=item.Did, MD5=item.FileMd5, IsImge=1).order_by(
-                        "-IsImge")
+                # 找到除当前之外的同名文件
+                _reply_objects = UserFile.objects.filter(FileName=item.FileName).exclude(id=item.id)
 
-                    cache_set2 = []
+                for _reply in _reply_objects:
+                    try:
+                        cache_all = CacheFile.objects.filter(identifier=_reply.Did, MD5=_reply.FileMd5, IsImge=1).order_by(
+                            "-IsImge")
+                        cache_one = cache_all.filter(CacheName=_reply.FileName).first()
 
-                    for cache_item in cache_all2:
+                        for cache_item in cache_all:
 
-                        if "/image/{}/{}".format(cache_item.identifier, cache_item.MD5) in cache_set2:
-                            continue
+                            if "/image/{}/{}".format(cache_item.identifier, cache_item.MD5) in cache_set:
+                                continue
 
-                        cache_set2.append("/image/{}/{}".format(cache_item.identifier, cache_item.MD5))
+                            cache_set.append("/image/{}/{}".format(cache_item.identifier, cache_item.MD5))
 
-                        cache_all_count += 1
-                        cache_list.append({
-                            "id": cache_item.id,
-                            "cache_name": cache_item.CacheName,
-                            "save_name": "/image/{}/{}".format(cache_item.identifier, cache_item.MD5),
-                            "is_img": cache_item.IsImge,
-                            "filename": item.FileName,
-                        })
+                            cache_all_count += 1
+                            cache_list.append({
+                                "id": cache_item.id,
+                                "cache_name": cache_item.CacheName,
+                                "save_name": "/image/{}/{}".format(cache_item.identifier, cache_item.MD5),
+                                "is_img": cache_item.IsImge,
+                                "filename": _reply.FileName,
+                            })
 
-                except CacheFile.DoesNotExist:
-                    continue
+                    except CacheFile.DoesNotExist:
+                        continue
                 continue
 
-            name_set.append(str(item.FileName))
+            else:
+                name_set.append(str(item.FileName))
 
             try:
                 cache_all = CacheFile.objects.filter(identifier=item.Did, MD5=item.FileMd5, IsImge=1).order_by("-IsImge")
                 cache_one = cache_all.filter(CacheName=item.FileName).first()
-
-                cache_set = []
 
                 for cache_item in cache_all:
 

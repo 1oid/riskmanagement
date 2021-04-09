@@ -229,7 +229,7 @@ def dir_scans(path):
         ext = _file.strip().split(".")[-1]
         _fullpath = path + "/" + _file
 
-        if ext == "dat3" and "DataInfo" in _file:
+        if ext == "cab" and "DataInfo" in _file:
             print("READ {}".format(_fullpath))
             run(_fullpath)
             print("DELETE {}".format(_fullpath))

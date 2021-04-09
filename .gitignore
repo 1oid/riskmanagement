@@ -1,3 +1,5 @@
+db.sqlite3
+manage/settings.py
 importdb.py
 migrations/
 db.sqlite3

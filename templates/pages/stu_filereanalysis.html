@@ -90,7 +90,7 @@
                                                         <td>{{ cache.filename }}</td>
                                                         <td>{{ cache.other }}</td>
                                                         <td>
-                                                            <img v-if="cache.is_img" class="viewer" @click="viewPhoto(item.save_name)"  :src="item.save_name">
+                                                            <img v-if="cache.is_img" class="viewer" @click="viewPhoto(cache.save_name)"  :src="cache.save_name">
                                                             <span v-else><label class="label label-danger">无缩略图</label></span>
 
                                                         </td>

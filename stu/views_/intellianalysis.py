@@ -69,7 +69,8 @@ class AnalysisView(View):
             cache_list = []
             first_item = {}
             cache_count = 0
-
+            cache_set = []
+            
             for index, value in enumerate(values):
 
                 _cache = CacheFile.objects.filter(identifier=value.did, MD5=value.md5, IsImge=1).last()
@@ -91,19 +92,26 @@ class AnalysisView(View):
                     }
 
                 if _cache:
-                    first_item['cache_all_count'] = first_item['cache_all_count'] + 1
-
-                    cache_list.append({
-                            "id": _cache.id,
-                            "cache_name": _cache.CacheName,
-                            "save_name": "/image/{}/{}".format(_cache.identifier, _cache.MD5),
-                            "is_img": _cache.IsImge,
-                            "filename": value.filename,
-                            "other": value.Other.strftime("%Y-%m-%d %H:%M:%S")
-                        })
+                    
+                    if str(value.filename) + str(value.md5) in cache_set:
+                        pass
+                    else:
+                        first_item['cache_all_count'] = first_item['cache_all_count'] + 1
+                    
+                        cache_set.append(str(value.filename) + str(value.md5))
+                        print(cache_set)
+                        
+                        cache_list.append({
+                                "id": _cache.id,
+                                "cache_name": _cache.CacheName,
+                                "save_name": "/image/{}/{}".format(_cache.identifier, _cache.MD5),
+                                "is_img": _cache.IsImge,
+                                "filename": value.filename,
+                                "other": value.Other.strftime("%Y-%m-%d %H:%M:%S")
+                            })
 
                 # print(len(values), index + 1)
-                if len(values) == index + 1:
+                if len(values) == index + 1 or len(values) == 1:
                     first_item['cache_all'] = cache_list
                     results.append(first_item)
 

@@ -56,12 +56,25 @@ class IndexView(View):
         fake = UserFile.objects.filter(FileTag=6).count()
 
         total = warning + troj + repeat + _print + fake
+        if total == 0:
+            return [
+                {"number": 0, "total": 0, "string": "风险文件", "percent": 0, "class": "yellow"},
+                {"number": 0, "total": 0, "string": "木马", "percent": 0, "class": "red"},
+                {"number": 0, "total": 0, "string": "重复", "percent": 0, "class": "blue"},
+                {"number": 0, "total": 0, "string": "打印", "percent": 0, "class": "gray"},
+                {"number": 0, "total": 0, "string": "伪装", "percent": 0, "class": "purple"},
+            ]
+
         return [
-            {"number": warning, "total": total, "string": "风险文件", "percent": round(warning/total * 100, 2), "class": "yellow"},
-            {"number": troj, "total": total, "string": "木马", "percent": round(troj/total * 100, 2), "class": "red"},
-            {"number": repeat, "total": total, "string": "重复", "percent": round(repeat/total * 100, 2), "class": "blue"},
-            {"number": _print, "total": total, "string": "打印", "percent": round(_print/total * 100, 2), "class": "gray"},
-            {"number": fake, "total": total, "string": "伪装", "percent": round(fake/total * 100, 2), "class": "purple"},
+            {"number": warning, "total": total, "string": "风险文件", "percent": round(warning / total * 100, 2),
+             "class": "yellow"},
+            {"number": troj, "total": total, "string": "木马", "percent": round(troj / total * 100, 2), "class": "red"},
+            {"number": repeat, "total": total, "string": "重复", "percent": round(repeat / total * 100, 2),
+             "class": "blue"},
+            {"number": _print, "total": total, "string": "打印", "percent": round(_print / total * 100, 2),
+             "class": "gray"},
+            {"number": fake, "total": total, "string": "伪装", "percent": round(fake / total * 100, 2),
+             "class": "purple"},
         ]
 
     def __usb_statistics(self):

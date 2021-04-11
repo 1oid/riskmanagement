@@ -141,6 +141,8 @@ def time_of_interval(start, end):
 def get_computer_name_by_id(did):
     try:
         _object = UserDevice.objects.filter(DId=did).last()
+        if not _object:
+            return "未知机器"
         return _object.DName
     except UserDevice.DoesNotExist as e:
         _object = UserDevice.objects.filter(DId=did).last()
